@@ -1,0 +1,29 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>ShopTrack GH — Login</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/tailwind.min.css') }}">
+</head>
+<body class="bg-slate-100 min-h-screen flex items-center justify-center">
+  <form method="post" class="bg-white p-8 rounded-xl shadow w-80">
+    <div class="flex items-center gap-2 mb-6">
+      <img src="{{ url_for('static', filename='img/track.png') }}" class="w-10 h-10" alt="">
+      <div>
+        <div class="font-bold text-lg">ShopTrack GH</div>
+        <div class="text-xs text-slate-500">Sign in to continue</div>
+      </div>
+    </div>
+    {% with msgs = get_flashed_messages(with_categories=true) %}
+      {% for cat, m in msgs %}
+        <div class="mb-3 text-sm p-2 rounded {{ 'bg-red-100 text-red-700' if cat=='error' else 'bg-emerald-100 text-emerald-700' }}">{{ m }}</div>
+      {% endfor %}
+    {% endwith %}
+    <label class="block text-sm mb-1">Username</label>
+    <input name="user" class="w-full border rounded px-3 py-2 mb-3" autofocus required>
+    <label class="block text-sm mb-1">Password</label>
+    <input name="pw" type="password" class="w-full border rounded px-3 py-2 mb-4" required>
+    <button class="w-full bg-slate-900 text-white rounded py-2 font-medium">Sign in</button>
+  </form>
+</body>
+</html>

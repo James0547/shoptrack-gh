@@ -1,0 +1,5 @@
+/* ShopTrack GH — tiny overrides on top of Tailwind */
+html, body { height: 100%; }
+body { -webkit-font-smoothing: antialiased; }
+input, select, textarea, button { font-family: inherit; }
+[x-cloak] { display: none !important; }   /* hides Alpine templates until ready */

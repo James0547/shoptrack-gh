@@ -1,0 +1,101 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Sync — ShopTrack GH</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/tailwind.min.css') }}">
+</head>
+<body class="bg-slate-100 text-slate-900">
+<header class="bg-slate-900 text-white px-6 py-3 flex items-center gap-3">
+  <img src="{{ url_for('static', filename='img/track.png') }}" class="w-8 h-8" alt="">
+  <div class="font-semibold">ShopTrack GH</div>
+  <a href="{{ url_for('pos_screen') }}" class="text-sm underline">POS</a>
+  <a href="{{ url_for('admin_dashboard') }}" class="text-sm underline">Products</a>
+  <a href="{{ url_for('admin_users') }}" class="text-sm underline">Users</a>
+  <a href="{{ url_for('admin_sync') }}" class="text-sm underline font-bold">Sync</a>
+  <div class="ml-auto text-sm opacity-80">{{ session.user.display_name }}</div>
+  <a href="{{ url_for('logout') }}" class="text-sm underline">Logout</a>
+</header>
+
+<main class="max-w-4xl mx-auto p-6">
+  {% with msgs = get_flashed_messages(with_categories=true) %}
+    {% for cat, m in msgs %}
+      <div class="mb-3 p-2 rounded text-sm {{ 'bg-red-100 text-red-700' if cat=='error' else 'bg-emerald-100 text-emerald-700' }}">{{ m }}</div>
+    {% endfor %}
+  {% endwith %}
+
+  <div class="bg-white rounded-xl shadow p-4 mb-4">
+    <div class="flex items-center gap-3">
+      <div>
+        <div class="text-xs text-slate-500">Cloud connection</div>
+        <div class="font-semibold">
+          {% if s.configured %}
+            <span class="text-emerald-700">Configured</span>
+          {% else %}
+            <span class="text-amber-700">Not configured (local only)</span>
+          {% endif %}
+        </div>
+      </div>
+      <div class="ml-6">
+        <div class="text-xs text-slate-500">Pending push</div>
+        <div class="font-semibold">{{ s.pending_push }} sale(s)</div>
+      </div>
+      <form method="post" action="{{ url_for('admin_sync_run') }}" class="ml-auto">
+        <button class="bg-slate-900 text-white px-4 py-2 rounded text-sm">
+          Sync now
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-2 gap-4 mb-4">
+    <div class="bg-white rounded-xl shadow p-4">
+      <div class="text-xs text-slate-500">Last push</div>
+      <div class="text-sm">{{ s.state.get('last_push_at') or '—' }}</div>
+      <div class="text-xs text-slate-400 mt-1">
+        cursor sale id: {{ s.state.get('last_pushed_sale_id', '0') }}
+      </div>
+    </div>
+    <div class="bg-white rounded-xl shadow p-4">
+      <div class="text-xs text-slate-500">Last pull</div>
+      <div class="text-sm">{{ s.state.get('last_pull_at') or '—' }}</div>
+      <div class="text-xs text-slate-400 mt-1">
+        cursor update id: {{ s.state.get('last_pulled_update_id', '0') }}
+      </div>
+    </div>
+  </div>
+
+  {% if s.state.get('last_error') %}
+    <div class="bg-red-50 border border-red-200 text-red-800 text-sm p-3 rounded mb-4">
+      Last error: {{ s.state.get('last_error') }}
+    </div>
+  {% endif %}
+
+  <div class="bg-white rounded-xl shadow overflow-hidden">
+    <div class="px-4 py-3 font-semibold border-b">Recent sync activity</div>
+    <table class="w-full text-sm">
+      <thead class="bg-slate-200 text-left">
+        <tr><th class="p-2">When</th><th class="p-2">Direction</th><th class="p-2">Status</th></tr>
+      </thead>
+      <tbody>
+        {% for r in s.recent %}
+          <tr class="border-t">
+            <td class="p-2 text-slate-500">{{ r.created_at }}</td>
+            <td class="p-2">{{ r.direction }}</td>
+            <td class="p-2">
+              {% if r.status.startswith('ok') %}
+                <span class="text-emerald-700">{{ r.status }}</span>
+              {% else %}
+                <span class="text-red-700">{{ r.status }}</span>
+              {% endif %}
+            </td>
+          </tr>
+        {% else %}
+          <tr><td colspan="3" class="p-4 text-center text-slate-400">No sync activity yet</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</main>
+</body>
+</html>

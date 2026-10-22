@@ -1,0 +1,95 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Users — ShopTrack GH</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/tailwind.min.css') }}">
+</head>
+<body class="bg-slate-100 text-slate-900">
+<header class="bg-slate-900 text-white px-6 py-3 flex items-center gap-3">
+  <img src="{{ url_for('static', filename='img/track.png') }}" class="w-8 h-8" alt="">
+  <div class="font-semibold">ShopTrack GH</div>
+  <a href="{{ url_for('pos_screen') }}" class="text-sm underline">POS</a>
+  <a href="{{ url_for('admin_dashboard') }}" class="text-sm underline">Products</a>
+  <a href="{{ url_for('admin_users') }}" class="text-sm underline font-bold">Users</a>
+  <div class="ml-auto text-sm opacity-80">{{ session.user.display_name }} ({{ session.user.role }})</div>
+  <a href="{{ url_for('logout') }}" class="text-sm underline">Logout</a>
+</header>
+
+<main class="max-w-5xl mx-auto p-6">
+  {% with msgs = get_flashed_messages(with_categories=true) %}
+    {% for cat, m in msgs %}
+      <div class="mb-3 p-2 rounded text-sm {{ 'bg-red-100 text-red-700' if cat=='error' else 'bg-emerald-100 text-emerald-700' }}">{{ m }}</div>
+    {% endfor %}
+  {% endwith %}
+
+  <details class="bg-white rounded-xl shadow mb-4">
+    <summary class="px-4 py-3 cursor-pointer font-semibold">+ Add user</summary>
+    <form method="post" action="{{ url_for('admin_users_new') }}"
+          class="grid grid-cols-2 gap-3 p-4 border-t">
+      <input name="display_name" required placeholder="Display name *" class="border rounded px-3 py-2">
+      <input name="username" required placeholder="Username *" class="border rounded px-3 py-2">
+      <select name="role" required class="border rounded px-3 py-2">
+        <option value="cashier">Cashier</option>
+        <option value="admin">Admin</option>
+      </select>
+      <input name="password" required type="password" minlength="8"
+             placeholder="Initial password (min 8) *" class="border rounded px-3 py-2">
+      <button class="bg-emerald-600 text-white rounded px-4 py-2 col-span-2">
+        Create user (they must change password on first login)
+      </button>
+    </form>
+  </details>
+
+  <div class="bg-white rounded-xl shadow overflow-hidden">
+    <table class="w-full text-sm">
+      <thead class="bg-slate-200 text-left">
+        <tr>
+          <th class="p-2">Name</th><th class="p-2">Username</th><th class="p-2">Role</th>
+          <th class="p-2">Status</th><th class="p-2">Must change pw</th>
+          <th class="p-2 text-right">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for u in users %}
+        <tr class="border-t">
+          <td class="p-2 font-medium">{{ u.display_name }}</td>
+          <td class="p-2">{{ u.username }}</td>
+          <td class="p-2">
+            <span class="text-xs px-2 py-0.5 rounded
+              {{ 'bg-amber-100 text-amber-800' if u.role=='admin' else 'bg-slate-200 text-slate-700' }}">
+              {{ u.role }}
+            </span>
+          </td>
+          <td class="p-2">{{ 'Active' if u.is_active else 'Deactivated' }}</td>
+          <td class="p-2">{{ 'Yes' if u.must_change_pw else 'No' }}</td>
+          <td class="p-2 text-right space-x-2">
+            <form method="post" action="{{ url_for('admin_users_reset', uid=u.id) }}"
+                  class="inline" onsubmit="return resetPrompt(this, '{{ u.username }}')">
+              <input type="hidden" name="password">
+              <button class="text-xs underline">Reset password</button>
+            </form>
+            <form method="post" action="{{ url_for('admin_users_toggle', uid=u.id) }}"
+                  class="inline" onsubmit="return confirm('Toggle active state for {{ u.username }}?')">
+              <button class="text-xs underline {{ 'text-red-600' if u.is_active else 'text-emerald-700' }}">
+                {{ 'Deactivate' if u.is_active else 'Activate' }}
+              </button>
+            </form>
+          </td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</main>
+
+<script>
+function resetPrompt(form, username) {
+  const pw = prompt("Set a temporary password for " + username + " (min 8 chars):");
+  if (!pw || pw.length < 8) { alert("Password must be at least 8 chars"); return false; }
+  form.querySelector('input[name="password"]').value = pw;
+  return confirm("Reset password for " + username + "? They must change it on next login.");
+}
+</script>
+</body>
+</html>

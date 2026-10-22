@@ -1,0 +1,120 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Products — ShopTrack GH</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/tailwind.min.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/app.css') }}">
+  <script defer src="{{ url_for('static', filename='js/alpine.min.js') }}"></script>
+</head>
+<body class="bg-slate-100 text-slate-900">
+<header class="bg-slate-900 text-white px-6 py-3 flex items-center gap-3">
+  <img src="{{ url_for('static', filename='img/track.png') }}" class="w-8 h-8" alt="">
+  <div class="font-semibold">ShopTrack GH — Products</div>
+  <a href="{{ url_for('pos_screen') }}" class="text-sm underline">POS</a>
+  <a href="{{ url_for('admin_users') }}" class="text-sm underline">Users</a>
+  <a href="{{ url_for('admin_sync') }}" class="text-sm underline">Sync</a>
+  <a href="{{ url_for('admin_reports') }}" class="text-sm underline">Reports</a>
+  <div class="ml-auto text-sm opacity-80">{{ session.user.display_name }} ({{ session.user.role }})</div>
+  <a href="{{ url_for('logout') }}" class="text-sm underline">Logout</a>
+</header>
+
+<main class="max-w-6xl mx-auto p-6">
+
+  {% with msgs = get_flashed_messages(with_categories=true) %}
+    {% for cat, m in msgs %}
+      <div class="mb-3 p-2 rounded text-sm {{ 'bg-red-100 text-red-700' if cat=='error' else 'bg-emerald-100 text-emerald-700' }}">{{ m }}</div>
+    {% endfor %}
+  {% endwith %}
+
+  <div class="grid grid-cols-2 gap-4 mb-6">
+    <section class="bg-white rounded-xl p-4 shadow">
+      <h2 class="font-semibold text-red-700 mb-2">Low stock ({{ low|length }})</h2>
+      <ul class="text-sm space-y-1">
+        {% for p in low %}<li>{{ p.name }} — <b>{{ p.stock }}</b> left</li>{% else %}<li class="text-slate-400">None 🎉</li>{% endfor %}
+      </ul>
+    </section>
+    <section class="bg-white rounded-xl p-4 shadow">
+      <h2 class="font-semibold text-amber-700 mb-2">Expiring ≤ 7 days ({{ exp|length }})</h2>
+      <ul class="text-sm space-y-1">
+        {% for p in exp %}<li>{{ p.name }} — {{ p.expiry_date }}</li>{% else %}<li class="text-slate-400">None</li>{% endfor %}
+      </ul>
+    </section>
+  </div>
+
+  <form method="get" class="flex gap-2 mb-4">
+    <input name="q" value="{{ search }}" placeholder="Search name / barcode / category"
+           class="flex-1 border rounded px-3 py-2 bg-white">
+    <select name="cat" class="border rounded px-3 py-2 bg-white">
+      <option value="">All categories</option>
+      {% for c in categories %}<option {{ 'selected' if c==active_cat }}>{{ c }}</option>{% endfor %}
+    </select>
+    <button class="bg-slate-900 text-white px-4 rounded">Search</button>
+    <a href="{{ url_for('admin_dashboard') }}" class="text-sm underline self-center">Reset</a>
+  </form>
+
+  <details class="bg-white rounded-xl shadow mb-4">
+    <summary class="px-4 py-3 cursor-pointer font-semibold">+ Add product</summary>
+    <form method="post" action="{{ url_for('admin_product_new') }}"
+          class="grid grid-cols-2 gap-3 p-4 border-t">
+      <input name="name" required placeholder="Name *" class="border rounded px-3 py-2 col-span-2">
+      <input name="barcode" placeholder="Barcode" class="border rounded px-3 py-2">
+      <input name="category" placeholder="Category" class="border rounded px-3 py-2">
+      <input name="price" required type="number" step="0.01" min="0" placeholder="Price *" class="border rounded px-3 py-2">
+      <input name="cost" type="number" step="0.01" min="0" placeholder="Cost" class="border rounded px-3 py-2">
+      <input name="stock" type="number" min="0" placeholder="Stock" class="border rounded px-3 py-2">
+      <input name="low_stock" type="number" min="0" placeholder="Low stock alert (default 5)" class="border rounded px-3 py-2">
+      <input name="expiry_date" type="date" class="border rounded px-3 py-2">
+      <button class="bg-emerald-600 text-white rounded px-4 py-2 col-span-2">Save product</button>
+    </form>
+  </details>
+
+  <div class="bg-white rounded-xl shadow overflow-hidden">
+    <table class="w-full text-sm">
+      <thead class="bg-slate-200 text-left">
+        <tr>
+          <th class="p-2">Name</th><th class="p-2">Category</th>
+          <th class="p-2">Price</th><th class="p-2">Stock</th>
+          <th class="p-2">Expiry</th><th class="p-2"></th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for p in products %}
+        <tr class="border-t hover:bg-slate-50" x-data="{edit:false}">
+          <td class="p-2 font-medium">{{ p.name }}
+            {% if p.stock <= p.low_stock %}<span class="ml-1 text-xs bg-red-100 text-red-700 px-1 rounded">LOW</span>{% endif %}
+          </td>
+          <td class="p-2">{{ p.category or '' }}</td>
+          <td class="p-2">₵{{ '%.2f'|format(p.price) }}</td>
+          <td class="p-2">{{ p.stock }}</td>
+          <td class="p-2">{{ p.expiry_date or '' }}</td>
+          <td class="p-2 text-right">
+            <button class="text-xs underline" @click="edit=!edit">Edit</button>
+            <form method="post" action="{{ url_for('admin_product_delete', pid=p.id) }}" class="inline"
+                  onsubmit="return confirm('Deactivate {{ p.name }}?')">
+              <button class="text-xs text-red-600 underline ml-2">Deactivate</button>
+            </form>
+            <form x-show="edit" method="post" action="{{ url_for('admin_product_edit', pid=p.id) }}"
+                  class="grid grid-cols-4 gap-2 mt-2">
+              <input name="name" value="{{ p.name }}" class="border rounded px-2 py-1">
+              <input name="price" type="number" step="0.01" value="{{ p.price }}" class="border rounded px-2 py-1">
+              <input name="stock" type="number" value="{{ p.stock }}" class="border rounded px-2 py-1">
+              <input name="low_stock" type="number" value="{{ p.low_stock }}" class="border rounded px-2 py-1">
+              <input name="barcode" value="{{ p.barcode or '' }}" placeholder="Barcode" class="border rounded px-2 py-1">
+              <input name="category" value="{{ p.category or '' }}" placeholder="Category" class="border rounded px-2 py-1">
+              <input name="cost" type="number" step="0.01" value="{{ p.cost or 0 }}" class="border rounded px-2 py-1">
+              <input name="expiry_date" type="date" value="{{ p.expiry_date or '' }}" class="border rounded px-2 py-1">
+              <button class="col-span-4 bg-slate-900 text-white rounded py-1 text-xs">Save</button>
+            </form>
+          </td>
+        </tr>
+      {% else %}
+        <tr><td colspan="6" class="p-6 text-center text-slate-400">No products yet — add one above.</td></tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+</main>
+</body>
+</html>

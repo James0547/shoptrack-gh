@@ -1,0 +1,84 @@
+2026-10-20 14:44:59,236 [INFO] Migration check: current=v0, target=v5
+2026-10-20 14:44:59,243 [INFO] Backup created: C:\Users\HERO HERO\Desktop\shoptrack_gh\data\backups\shoptrack_20261020_144459_before_v0_to_v5.db
+2026-10-20 14:44:59,243 [INFO] Backup path: C:\Users\HERO HERO\Desktop\shoptrack_gh\data\backups\shoptrack_20261020_144459_before_v0_to_v5.db
+2026-10-20 14:44:59,244 [INFO] Applying migration v1: initial schema
+2026-10-20 14:55:08,536 [INFO] Migration check: current=v1, target=v5
+2026-10-20 14:55:08,552 [INFO] Backup created: C:\Users\HERO HERO\Desktop\shoptrack_gh\data\backups\shoptrack_20261020_145508_before_v1_to_v5.db
+2026-10-20 14:55:08,552 [INFO] Backup path: C:\Users\HERO HERO\Desktop\shoptrack_gh\data\backups\shoptrack_20261020_145508_before_v1_to_v5.db
+2026-10-20 14:55:08,552 [INFO] Applying migration v2: settings seed + active/category index
+2026-10-20 14:55:10,619 [INFO] OK v2
+2026-10-20 14:55:10,620 [INFO] Applying migration v3: users table + default admin
+2026-10-20 14:55:24,429 [INFO] OK v3
+2026-10-20 14:55:24,429 [INFO] Applying migration v4: sync state cursors
+2026-10-20 14:55:27,255 [INFO] OK v4
+2026-10-20 14:55:27,255 [INFO] Applying migration v5: export log + daily report settings
+2026-10-20 14:55:28,239 [INFO] OK v5
+2026-10-20 14:55:28,239 [INFO] Migration complete. Now at v5.
+2026-10-20 14:59:05,222 [INFO] Migration check: current=v5, target=v5
+2026-10-20 14:59:05,403 [INFO] Already up to date.
+2026-10-20 15:20:37,963 [INFO] Migration check: current=v5, target=v5
+2026-10-20 15:20:37,963 [INFO] Already up to date.
+2026-10-20 15:36:13,070 [INFO] Migration check: current=v0, target=v5
+2026-10-20 15:36:13,073 [INFO] Backup created: C:\Users\HEROHE~1\AppData\Local\Temp\shoptrack_models_wzsk9xdv\backups\shoptrack_20261020_153613_before_v0_to_v5.db
+2026-10-20 15:36:13,073 [INFO] Backup path: C:\Users\HEROHE~1\AppData\Local\Temp\shoptrack_models_wzsk9xdv\backups\shoptrack_20261020_153613_before_v0_to_v5.db
+2026-10-20 15:36:13,073 [INFO] Applying migration v1: initial schema
+2026-10-20 15:36:15,545 [INFO] OK v1
+2026-10-20 15:36:15,545 [INFO] Applying migration v2: settings seed + active/category index
+2026-10-20 15:36:16,013 [INFO] OK v2
+2026-10-20 15:36:16,013 [INFO] Applying migration v3: users table + default admin
+2026-10-20 15:36:19,407 [INFO] OK v3
+2026-10-20 15:36:19,407 [INFO] Applying migration v4: sync state cursors
+2026-10-20 15:36:20,360 [INFO] OK v4
+2026-10-20 15:36:20,360 [INFO] Applying migration v5: export log + daily report settings
+2026-10-20 15:36:20,905 [INFO] OK v5
+2026-10-20 15:36:20,906 [INFO] Migration complete. Now at v5.
+2026-10-20 15:36:26,607 [INFO] Migration check: current=v0, target=v5
+2026-10-20 15:36:26,611 [INFO] Backup created: C:\Users\HEROHE~1\AppData\Local\Temp\shoptrack_search_6nl6tf7d\backups\shoptrack_20261020_153626_before_v0_to_v5.db
+2026-10-20 15:36:26,611 [INFO] Backup path: C:\Users\HEROHE~1\AppData\Local\Temp\shoptrack_search_6nl6tf7d\backups\shoptrack_20261020_153626_before_v0_to_v5.db
+2026-10-20 15:36:26,611 [INFO] Applying migration v1: initial schema
+2026-10-20 15:36:30,301 [INFO] OK v1
+2026-10-20 15:36:30,301 [INFO] Applying migration v2: settings seed + active/category index
+2026-10-20 15:36:31,278 [INFO] OK v2
+2026-10-20 15:36:31,279 [INFO] Applying migration v3: users table + default admin
+2026-10-20 15:36:33,894 [INFO] OK v3
+2026-10-20 15:36:33,894 [INFO] Applying migration v4: sync state cursors
+2026-10-20 15:36:35,598 [INFO] OK v4
+2026-10-20 15:36:35,598 [INFO] Applying migration v5: export log + daily report settings
+2026-10-20 15:36:36,743 [INFO] OK v5
+2026-10-20 15:36:36,745 [INFO] Migration complete. Now at v5.
+2026-10-20 15:47:54,721 [INFO] Migration check: current=v5, target=v5
+2026-10-20 15:47:55,294 [INFO] Already up to date.
+2026-10-20 15:55:06,974 [INFO] Migration check: current=v5, target=v5
+2026-10-20 15:55:08,162 [INFO] Already up to date.
+2026-10-20 17:18:40,594 [INFO] Migration check: current=v5, target=v5
+2026-10-20 17:18:40,696 [INFO] Already up to date.
+2026-10-20 17:44:33,864 [INFO] Migration check: current=v5, target=v5
+2026-10-20 17:44:33,951 [INFO] Already up to date.
+2026-10-20 17:54:49,401 [INFO] Migration check: current=v5, target=v5
+2026-10-20 17:54:49,401 [INFO] Already up to date.
+2026-10-20 18:39:17,039 [INFO] Migration check: current=v5, target=v5
+2026-10-20 18:39:17,123 [INFO] Already up to date.
+2026-10-20 19:04:40,376 [INFO] Migration check: current=v5, target=v5
+2026-10-20 19:04:40,408 [INFO] Already up to date.
+2026-10-20 23:56:50,832 [INFO] Migration check: current=v5, target=v5
+2026-10-20 23:56:50,859 [INFO] Already up to date.
+2026-10-21 00:03:47,111 [INFO] Migration check: current=v5, target=v5
+2026-10-21 00:03:47,175 [INFO] Already up to date.
+2026-10-21 07:48:57,454 [INFO] Migration check: current=v5, target=v5
+2026-10-21 07:48:57,564 [INFO] Already up to date.
+2026-10-21 08:12:49,859 [INFO] Migration check: current=v5, target=v5
+2026-10-21 08:12:49,922 [INFO] Already up to date.
+2026-10-21 08:34:57,144 [INFO] Migration check: current=v5, target=v5
+2026-10-21 08:34:57,202 [INFO] Already up to date.
+2026-10-21 09:07:35,263 [INFO] Migration check: current=v5, target=v5
+2026-10-21 09:07:35,332 [INFO] Already up to date.
+2026-10-21 09:37:06,024 [INFO] Migration check: current=v5, target=v5
+2026-10-21 09:37:06,070 [INFO] Already up to date.
+2026-10-21 10:16:13,566 [INFO] Migration check: current=v5, target=v5
+2026-10-21 10:16:13,754 [INFO] Already up to date.
+2026-10-21 10:27:41,338 [INFO] Migration check: current=v5, target=v5
+2026-10-21 10:27:41,494 [INFO] Already up to date.
+2026-10-21 10:39:16,191 [INFO] Migration check: current=v5, target=v5
+2026-10-21 10:39:16,192 [INFO] Already up to date.
+2026-10-22 08:20:14,708 [INFO] Migration check: current=v5, target=v5
+2026-10-22 08:20:14,799 [INFO] Already up to date.

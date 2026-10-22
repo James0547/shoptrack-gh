@@ -1,0 +1,62 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Receipt {{ r.receipt_no }}</title>
+  <style>
+    /* 58mm thermal default; expands gracefully on A4 */
+    body { font-family: ui-monospace, Menlo, Consolas, monospace; margin: 0; padding: 8px; }
+    .sheet { max-width: 58mm; margin: 0 auto; }
+    h1 { font-size: 14px; margin: 0 0 4px; text-align: center; }
+    .center { text-align: center; }
+    .muted { color: #555; }
+    .hr { border-top: 1px dashed #000; margin: 6px 0; }
+    table { width: 100%; border-collapse: collapse; font-size: 11px; }
+    td { padding: 1px 0; vertical-align: top; }
+    td.r { text-align: right; white-space: nowrap; }
+    .total { font-size: 13px; font-weight: bold; }
+    .actions { margin-top: 12px; text-align: center; }
+    @media print {
+      .actions { display: none; }
+      body { padding: 0; }
+      .sheet { max-width: none; }
+    }
+    @media (min-width: 500px) {
+      /* A4 fallback: centre sheet, larger font */
+      .sheet { max-width: 80mm; }
+    }
+  </style>
+</head>
+<body>
+<div class="sheet">
+  <h1>ShopTrack GH</h1>
+  <div class="center muted" style="font-size:10px;">
+    {{ shop_name or 'My Shop' }}<br>
+    Receipt: {{ r.receipt_no }}<br>
+    {{ r.created_at }}
+  </div>
+  <div class="hr"></div>
+  <table>
+    <tr><td><b>Item</b></td><td class="r"><b>Qty</b></td><td class="r"><b>Amount</b></td></tr>
+    {% for it in r.items %}
+      <tr>
+        <td>{{ it.name }}</td>
+        <td class="r">{{ it.qty }}</td>
+        <td class="r">{{ '%.2f'|format(it.line_total) }}</td>
+      </tr>
+    {% endfor %}
+  </table>
+  <div class="hr"></div>
+  <table>
+    <tr class="total"><td>Total</td><td class="r">GHS {{ '%.2f'|format(r.total) }}</td></tr>
+    <tr><td>Payment</td><td class="r">{{ r.payment|upper }}</td></tr>
+  </table>
+  <div class="hr"></div>
+  <div class="center muted" style="font-size:10px;">Thank you — come again</div>
+  <div class="actions">
+    <button onclick="window.print()">Print</button>
+    <a href="{{ url_for('pos_screen') }}">Back to POS</a>
+  </div>
+</div>
+</body>
+</html>
